@@ -59,7 +59,7 @@ app.post('/api/download', async (req, res) => {
             return res.status(400).json({ error: 'Missing video URL' });
         }
 
-        const videoStream = ytdl(url, { quality: quality || 'highest' });
+        const videoStream = ytdl(url, { quality: quality || 'bestvideo' });
 
         // Set headers for file download
         res.setHeader('Content-Disposition', 'attachment; filename="downloaded-video.mp4"');
