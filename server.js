@@ -76,17 +76,17 @@ app.post('/api/download', async (req, res) => {
 
 // Route to download audio
 app.post('/api/downloadAudio', async (req, res) => {
-    const { url, audioInfo } = req.body;
+    const { url } = req.body;
 
     try {
-        if (!url || !audioInfo) {
-            return res.status(400).json({ error: 'Missing video URL or audio information' });
+        if (!url) {
+            return res.status(400).json({ error: 'Missing video URL' });
         }
 
-        const audioTitle = audioInfo.title.replace(/[^a-zA-Z0-9]/g, '_');
         const audioStream = ytdl(url, { filter: 'audioonly' });
 
-        res.setHeader('Content-Disposition', `attachment; filename="${audioTitle}.mp3"`);
+        // Set headers for file download
+        res.setHeader('Content-Disposition', 'attachment; filename="downloaded-audio.mp3"');
         res.setHeader('Content-Type', 'audio/mpeg');
 
         audioStream.pipe(res);
@@ -96,6 +96,7 @@ app.post('/api/downloadAudio', async (req, res) => {
         res.status(500).json({ error: 'Failed to download audio' });
     }
 });
+
 
 
 // Start server
