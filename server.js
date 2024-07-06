@@ -52,17 +52,17 @@ app.post('/api/fetchAudioInfo', async (req, res) => {
 
 // Route to download video
 app.post('/api/download', async (req, res) => {
-    const { url, quality, videoInfo } = req.body;
+    const { url, quality } = req.body;
 
     try {
-        if (!url || !videoInfo) {
-            return res.status(400).json({ error: 'Missing video URL or video information' });
+        if (!url) {
+            return res.status(400).json({ error: 'Missing video URL' });
         }
 
-        const videoTitle = videoInfo.title.replace(/[^a-zA-Z0-9]/g, '_');
         const videoStream = ytdl(url, { quality: quality || 'highest' });
 
-        res.setHeader('Content-Disposition', `attachment; filename="${videoTitle}.mp4"`);
+        // Set headers for file download
+        res.setHeader('Content-Disposition', 'attachment; filename="downloaded-video.mp4"');
         res.setHeader('Content-Type', 'video/mp4');
 
         videoStream.pipe(res);
@@ -72,6 +72,7 @@ app.post('/api/download', async (req, res) => {
         res.status(500).json({ error: 'Failed to download video' });
     }
 });
+
 
 // Route to download audio
 app.post('/api/downloadAudio', async (req, res) => {
